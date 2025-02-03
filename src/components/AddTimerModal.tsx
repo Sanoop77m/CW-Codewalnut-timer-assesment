@@ -99,7 +99,7 @@ export const AddTimerModal: React.FC<AddTimerModalProps> = ({
               onChange={(e) => setTitle(e.target.value)}
               onBlur={() => setTouched({ ...touched, title: true })}
               maxLength={50}
-              className={` ${
+              className={`w-full border border-gray-500 p-2 rounded-md ${
                 touched.title && !isTitleValid
                   ? "border-red-500"
                   : "border-gray-300"
@@ -124,7 +124,7 @@ export const AddTimerModal: React.FC<AddTimerModalProps> = ({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
-              className=""
+              className="w-full border border-gray-500 rounded-md p-2"
               placeholder="Enter timer description (optional)"
             />
           </div>
@@ -147,7 +147,7 @@ export const AddTimerModal: React.FC<AddTimerModalProps> = ({
                     setHours(Math.min(23, parseInt(e.target.value) || 0))
                   }
                   onBlur={() => setTouched({ ...touched, hours: true })}
-                  className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none w-full px-3 py-2 "
+                  className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm "
                 />
               </div>
               <div>
@@ -163,7 +163,7 @@ export const AddTimerModal: React.FC<AddTimerModalProps> = ({
                     setMinutes(Math.min(59, parseInt(e.target.value) || 0))
                   }
                   onBlur={() => setTouched({ ...touched, minutes: true })}
-                  className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none w-full px-3 py-2"
+                  className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm "
                 />
               </div>
               <div>
@@ -179,7 +179,7 @@ export const AddTimerModal: React.FC<AddTimerModalProps> = ({
                     setSeconds(Math.min(59, parseInt(e.target.value) || 0))
                   }
                   onBlur={() => setTouched({ ...touched, seconds: true })}
-                  className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm "
                 />
               </div>
             </div>

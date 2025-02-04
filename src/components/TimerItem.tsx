@@ -8,6 +8,7 @@ import { EditTimerModal } from "./EditTimerModal";
 import { TimerAudio } from "../utils/audio";
 import { TimerControls } from "./TimerControls";
 import { TimerProgress } from "./TimerProgress";
+import { AddTimerModal } from "./AddTimerModal";
 
 interface TimerItemProps {
   timer: Timer;
@@ -158,7 +159,7 @@ export const TimerItem: React.FC<TimerItemProps> = ({ timer }) => {
         </div>
       </div>
 
-      <EditTimerModal
+      <AddTimerModal
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
         timer={timer}

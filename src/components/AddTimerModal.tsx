@@ -1,23 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { X, Clock } from "lucide-react";
 import { useTimerStore } from "../store/useTimerStore";
 import { validateTimerForm } from "../utils/validation";
 import { ActionButton } from "./ActionButton";
+import { Timer } from "../types/timer";
 
 interface AddTimerModalProps {
   isOpen: boolean;
   onClose: () => void;
+  timer: any;
 }
 
 export const AddTimerModal: React.FC<AddTimerModalProps> = ({
   isOpen,
   onClose,
+  timer,
 }) => {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [hours, setHours] = useState(0);
-  const [minutes, setMinutes] = useState(0);
-  const [seconds, setSeconds] = useState(0);
+  //timer is not null then input fields are updated with timer tittle and properties
+  const [title, setTitle] = useState(`${timer ? timer.title : ""}`);
+  const [description, setDescription] = useState(
+    `${timer ? timer.description : ""}`
+  );
+  const [hours, setHours] = useState(
+    timer ? Math.floor(timer.duration / 3600) : 0
+  );
+  const [minutes, setMinutes] = useState(
+    timer ? Math.floor((timer.duration % 3600) / 60) : 0
+  );
+  const [seconds, setSeconds] = useState(timer ? timer.duration % 60 : 0);
   const [touched, setTouched] = useState({
     title: false,
     hours: false,
@@ -25,7 +35,23 @@ export const AddTimerModal: React.FC<AddTimerModalProps> = ({
     seconds: false,
   });
 
-  const { addTimer } = useTimerStore();
+  const { addTimer, editTimer } = useTimerStore();
+
+  useEffect(() => {
+    if (isOpen) {
+      setTitle(`${timer ? timer.title : ""}`);
+      setDescription(`${timer ? timer.description : ""}`);
+      setHours(timer ? Math.floor(timer.duration / 3600) : 0);
+      setMinutes(timer ? Math.floor((timer.duration % 3600) / 60) : 0);
+      setSeconds(timer ? timer.duration % 60 : 0);
+      setTouched({
+        title: false,
+        hours: false,
+        minutes: false,
+        seconds: false,
+      });
+    }
+  }, [isOpen, timer]);
 
   if (!isOpen) return null;
 
@@ -37,14 +63,21 @@ export const AddTimerModal: React.FC<AddTimerModalProps> = ({
     }
 
     const totalSeconds = hours * 3600 + minutes * 60 + seconds;
-
-    addTimer({
-      title: title.trim(),
-      description: description.trim(),
-      duration: totalSeconds,
-      remainingTime: totalSeconds,
-      isRunning: false,
-    });
+    if (timer) {
+      editTimer(timer.id, {
+        title: title.trim(),
+        description: description.trim(),
+        duration: totalSeconds,
+      });
+    } else {
+      addTimer({
+        title: title.trim(),
+        description: description.trim(),
+        duration: totalSeconds,
+        remainingTime: totalSeconds,
+        isRunning: false,
+      });
+    }
 
     onClose();
     setTitle("");
@@ -203,7 +236,7 @@ export const AddTimerModal: React.FC<AddTimerModalProps> = ({
               handleClick={handleClose}
             />
             <ActionButton
-              title="Add Timer"
+              title={`${timer?"Save Changes":"Add Timer"}`}
               isPrimary={true}
               buttonType="submit"
               disabled={!isTitleValid || !isTimeValid}

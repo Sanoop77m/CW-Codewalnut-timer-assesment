@@ -25,7 +25,7 @@ A feature-rich **React Timer App** built using **Redux Toolkit** . This app allo
 1. **Clone the Repository:**
    ```sh
    git clone https://github.com/Sanoop77m/CW-Codewalnut-timer-assesment.git
-   cd timer-app
+   cd CW-Codewalnut-timer-assesment
    ```
 
 2. **Install Dependencies:**

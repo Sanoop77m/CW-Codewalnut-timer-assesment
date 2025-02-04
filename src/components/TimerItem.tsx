@@ -41,6 +41,10 @@ export const TimerItem: React.FC<TimerItemProps> = ({ timer }) => {
                   onClick: () => timerAudio.stop(),
                 },
               });
+              // Stop the beep sound when the toast auto-dismisses after 5 seconds
+              setTimeout(() => {
+                timerAudio.stop(); // Stop the beep sound when the toast auto-dismisses
+              }, 5000);
             }
             return 0;
           }

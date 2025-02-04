@@ -3,6 +3,7 @@ export class TimerAudio {
   private audioContext: AudioContext | null = null;
   private oscillator: OscillatorNode | null = null;
   private gainNode: GainNode | null = null;
+  private isPlaying: boolean = false; // Track whether audio is playing
 
   private constructor() {}
 
@@ -24,54 +25,40 @@ export class TimerAudio {
   }
 
   async play(): Promise<void> {
+    if (this.isPlaying) return; // Prevent multiple instances of sound
+    this.isPlaying = true;
+
     try {
       await this.initializeAudioContext();
-      
-      if (!this.audioContext) {
-        throw new Error('AudioContext not initialized');
-      }
+      if (!this.audioContext) throw new Error('AudioContext not initialized');
 
-      // Create and configure oscillator
       this.oscillator = this.audioContext.createOscillator();
       this.gainNode = this.audioContext.createGain();
-      
-      this.oscillator.type = 'sine';
+
+      this.oscillator.type = 'sine'; // Choose sine wave
       this.oscillator.frequency.setValueAtTime(880, this.audioContext.currentTime); // A5 note
-      
-      // Configure gain (volume) envelope
-      this.gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
-      this.gainNode.gain.linearRampToValueAtTime(0.5, this.audioContext.currentTime + 0.01);
-      this.gainNode.gain.linearRampToValueAtTime(0, this.audioContext.currentTime + 0.5);
-      
-      // Connect nodes
+
+      this.gainNode.gain.setValueAtTime(0.5, this.audioContext.currentTime); // Volume
+
       this.oscillator.connect(this.gainNode);
       this.gainNode.connect(this.audioContext.destination);
-      
-      // Start and stop the oscillator
-      this.oscillator.start(this.audioContext.currentTime);
-      this.oscillator.stop(this.audioContext.currentTime + 0.5);
-      
-      // Cleanup after sound ends
-      setTimeout(() => {
-        this.cleanup();
-      }, 500);
 
+      this.oscillator.start(); // Start sound
     } catch (error) {
       console.error('Failed to play audio:', error);
     }
   }
 
   stop(): void {
-    this.cleanup();
-  }
+    if (!this.isPlaying) return; // Prevent stopping if not playing
+    this.isPlaying = false;
 
-  private cleanup(): void {
     if (this.oscillator) {
       try {
-        this.oscillator.stop();
-        this.oscillator.disconnect();
+        this.oscillator.stop(); // Stop oscillator
+        this.oscillator.disconnect(); // Disconnect
       } catch (error) {
-        console.log(error)
+        console.error(error);
       }
       this.oscillator = null;
     }

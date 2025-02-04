@@ -4,7 +4,6 @@ import { Timer } from "../types/timer";
 import { formatTime } from "../utils/time";
 import { useTimerStore } from "../store/useTimerStore";
 import { toast } from "sonner";
-import { EditTimerModal } from "./EditTimerModal";
 import { TimerAudio } from "../utils/audio";
 import { TimerControls } from "./TimerControls";
 import { TimerProgress } from "./TimerProgress";
@@ -22,6 +21,23 @@ export const TimerItem: React.FC<TimerItemProps> = ({ timer }) => {
   const timerAudio = TimerAudio.getInstance();
   const hasEndedRef = useRef(false);
   const [remainingTime, setRemainingTime] = useState(timer.remainingTime); // Local state for timer
+  const [toastPosition, setToastPosition] = useState<
+    "top-center" | "bottom-center"
+  >("top-center");
+
+  // Detect mobile screen
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setToastPosition(
+        window.innerWidth < 768 ? "bottom-center" : "top-center"
+      );
+    };
+
+    checkScreenSize(); // Run on mount
+    window.addEventListener("resize", checkScreenSize); // Listen for screen changes
+
+    return () => window.removeEventListener("resize", checkScreenSize);
+  }, []);
 
   useEffect(() => {
     if (timer.isRunning && !intervalRef.current) {
@@ -37,6 +53,7 @@ export const TimerItem: React.FC<TimerItemProps> = ({ timer }) => {
 
               toast.success(`Timer "${timer.title}" has ended!`, {
                 duration: 5000,
+                position: toastPosition,
                 action: {
                   label: "Dismiss",
                   onClick: () => timerAudio.stop(),

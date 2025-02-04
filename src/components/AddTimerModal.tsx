@@ -3,7 +3,6 @@ import { X, Clock } from "lucide-react";
 import { useTimerStore } from "../store/useTimerStore";
 import { validateTimerForm } from "../utils/validation";
 import { ActionButton } from "./ActionButton";
-import { Timer } from "../types/timer";
 
 interface AddTimerModalProps {
   isOpen: boolean;
@@ -236,10 +235,10 @@ export const AddTimerModal: React.FC<AddTimerModalProps> = ({
               handleClick={handleClose}
             />
             <ActionButton
-              title={`${timer?"Save Changes":"Add Timer"}`}
+              title={`${timer ? "Save Changes" : "Add Timer"}`}
               isPrimary={true}
               buttonType="submit"
-              disabled={!isTitleValid || !isTimeValid}
+              disabled={false}
               handleClick={() => {}}
             />
           </div>
